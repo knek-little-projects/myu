@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
-from .process import mix
+from process import mix
 
 
 UPLOAD_FOLDER = r'uploads'
@@ -25,8 +25,8 @@ def upload_file():
             filename = secure_filename(file.filename)
             savepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(savepath)
-            mix(savepath)
-            return redirect(url_for('uploaded_file', filename=filename))
+            video_path = mix(savepath)
+            return redirect(url_for('uploaded_file', filename='out.mp4'))
     return '''
 <!doctype html>
 <title>Upload image</title>
@@ -41,8 +41,10 @@ def upload_file():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], "out.mp4")
+    return send_from_directory(app.config['UPLOAD_FOLDER'], "out.mp4", as_attachment=True)
+
 
 
 if __name__ == '__main__':
+    os.makedirs("uploads", exist_ok=True)
     app.run()
