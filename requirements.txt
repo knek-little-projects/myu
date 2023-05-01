@@ -3,4 +3,4 @@ numpy==1.16.4
 PySynth==2.3
 playsound==1.2.2
 moviepy==1.0.0
-Flask==1.0.3
+Flask==2.3.2
